@@ -31,9 +31,7 @@ jobs:
     - name: Configure CMake
       run: |
         if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-          DOTNET_ROOT=$(dotnet --info | grep "Base Path" | cut -d: -f2 | xargs)
-          CMAKE_CSharp_COMPILER="$DOTNET_ROOT/Roslyn/bincore/csc.dll"
-          cmake -S . -B build -DCMAKE_CSharp_COMPILER="$CMAKE_CSharp_COMPILER"
+          cmake -S . -B build -DCMAKE_CSharp_COMPILER=csc
         else
           cmake -S . -B build
         fi
