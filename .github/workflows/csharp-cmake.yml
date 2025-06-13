@@ -24,6 +24,12 @@ jobs:
         
     - name: Install CMake
       uses: lukka/get-cmake@latest
+
+    - name: Install C# Compiler (Ubuntu)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt update
+        sudo apt install -y mono-complete mono-mcs
       
     - name: Create Build Directory
       run: mkdir -p build
