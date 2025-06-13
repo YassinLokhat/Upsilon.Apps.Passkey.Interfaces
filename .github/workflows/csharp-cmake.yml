@@ -28,25 +28,25 @@ jobs:
     - name: Create Build Directory
       run: mkdir -p build
       
-    - name: Configure CMake
+    - name: Generate Solution (Windows only)
+      if: matrix.os == 'windows-latest'
       run: |
-        if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-          cmake -S . -B build -DCMAKE_CSharp_COMPILER=csc
-        else
-          cmake -S . -B build
-        fi
-      
-    - name: Build
-      run: cmake --build build --config Release
-      
-    - name: Restore dependencies
-      run: dotnet restore build/Upsilon.Apps.Passkey.Interfaces.sln
-      
-    - name: Build
-      run: dotnet build --no-restore build/Upsilon.Apps.Passkey.Interfaces.sln
-      
-    - name: Test
-      run: dotnet test --no-build --verbosity normal build/Upsilon.Apps.Passkey.Interfaces.sln
+        mkdir build
+        cmake -S . -B build -G "Visual Studio 17 2022"
+        
+    - name: Build (Windows - CMake generated)
+      if: matrix.os == 'windows-latest'
+      run: |
+        dotnet restore build/Upsilon.Apps.Passkey.Interfaces.sln
+        dotnet build --no-restore build/Upsilon.Apps.Passkey.Interfaces.sln --configuration Release
+        dotnet test --no-build --verbosity normal build/Upsilon.Apps.Passkey.Interfaces.sln --configuration Release
+        
+    - name: Build (Ubuntu - Direct)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        dotnet restore
+        dotnet build --configuration Release
+        dotnet test --configuration Release --verbosity normal
 
 permissions:
   contents: read
