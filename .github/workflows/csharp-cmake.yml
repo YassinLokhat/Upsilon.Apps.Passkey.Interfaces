@@ -8,12 +8,12 @@ on:
 
 jobs:
   build:
-    #strategy:
-    #  matrix:
-    #    os: [ubuntu-latest, windows-latest]
-    #
-    #runs-on: ${{ matrix.os }}    
-    runs-on: windows-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    
+    runs-on: ${{ matrix.os }}    
+    #runs-on: windows-latest
     
     steps:
     - uses: actions/checkout@v4
@@ -35,13 +35,13 @@ jobs:
       run: cmake --build build --config Release
       
     - name: Restore dependencies
-      run: dotnet restore build/Upsilon.Apps.Passkey.Core.sln
+      run: dotnet restore build/Upsilon.Apps.Passkey.Interfaces.sln
       
     - name: Build
-      run: dotnet build --no-restore build/Upsilon.Apps.Passkey.Core.sln
+      run: dotnet build --no-restore build/Upsilon.Apps.Passkey.Interfaces.sln
       
     - name: Test
-      run: dotnet test --no-build --verbosity normal build/Upsilon.Apps.Passkey.Core.sln
+      run: dotnet test --no-build --verbosity normal build/Upsilon.Apps.Passkey.Interfaces.sln
 
 permissions:
   contents: read
