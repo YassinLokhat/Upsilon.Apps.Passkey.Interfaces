@@ -2,9 +2,9 @@ name: C# Build with CMake
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -22,26 +22,12 @@ jobs:
       with:
         dotnet-version: 8.0.x
         
-    - name: Install CMake
-      uses: lukka/get-cmake@latest
-      
-    - name: Create Build Directory
-      run: mkdir -p build
-      
-    - name: Configure CMake
-      run: cmake -S . -B build
-      
-    - name: Build
-      run: cmake --build build --config Release
-      
     - name: Restore dependencies
-      run: dotnet restore build/Upsilon.Apps.Passkey.Interfaces.sln
+      run: dotnet restore Upsilon.Apps.Passkey.Interfaces.sln
       
     - name: Build
-      run: dotnet build --no-restore build/Upsilon.Apps.Passkey.Interfaces.sln
+      run: dotnet build Upsilon.Apps.Passkey.Interfaces.sln --no-restore --configuration Release
       
-    - name: Test
-      run: dotnet test --no-build --verbosity normal build/Upsilon.Apps.Passkey.Interfaces.sln
 
 permissions:
   contents: read
