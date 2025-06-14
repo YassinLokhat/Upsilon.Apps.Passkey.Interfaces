@@ -22,31 +22,12 @@ jobs:
       with:
         dotnet-version: 8.0.x
         
-    - name: Install CMake
-      uses: lukka/get-cmake@latest
+    - name: Restore dependencies
+      run: dotnet restore Upsilon.Apps.Passkey.Interfaces.sln
       
-    - name: Create Build Directory
-      run: mkdir -p build
+    - name: Build
+      run: dotnet build Upsilon.Apps.Passkey.Interfaces.sln --no-restore --configuration Release
       
-    - name: Generate Solution (Windows only)
-      if: matrix.os == 'windows-latest'
-      run: |
-        mkdir build
-        cmake -S . -B build -G "Visual Studio 17 2022"
-        
-    - name: Build (Windows - CMake generated)
-      if: matrix.os == 'windows-latest'
-      run: |
-        dotnet restore build/Upsilon.Apps.Passkey.Interfaces.sln
-        dotnet build --no-restore build/Upsilon.Apps.Passkey.Interfaces.sln --configuration Release
-        dotnet test --no-build --verbosity normal build/Upsilon.Apps.Passkey.Interfaces.sln --configuration Release
-        
-    - name: Build (Ubuntu - Direct)
-      if: matrix.os == 'ubuntu-latest'
-      run: |
-        dotnet restore
-        dotnet build --configuration Release
-        dotnet test --configuration Release --verbosity normal
 
 permissions:
   contents: read
